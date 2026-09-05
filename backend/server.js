@@ -17,8 +17,15 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 
+
+
 // MongoDB
 connectDB();
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://bis-saathi-ai-kqiq.vercel.app",
+];
 
 // Middleware
 app.use(cors());
@@ -42,5 +49,5 @@ app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running`);
 });

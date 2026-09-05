@@ -6,32 +6,76 @@ import dns from "dns";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import {
+  notFound,
+  errorHandler,
+} from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
-dns.setServers(["1.1.1.1","8.8.8.8"]);
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express();
 
 const PORT = process.env.PORT || 4000;
 
+// =====================================================
+// DATABASE
+// =====================================================
 
-
-
-// MongoDB
 connectDB();
 
+// =====================================================
+// CORS
+// =====================================================
+
 const allowedOrigins = [
+  "http://localhost:5173",
   "http://localhost:4000",
-  "https://bis-saathi-ai-kqiq.vercel.app/assistant",
+  "https://bis-saathi-ai-kqiq.vercel.app",
 ];
 
-// Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Postman / server-to-server requests
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
+  })
+);
+
+// =====================================================
+// BODY PARSER
+// =====================================================
+
 app.use(express.json());
 
-// Test route
+// =====================================================
+// TEST ROUTE
+// =====================================================
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -39,15 +83,29 @@ app.get("/", (req, res) => {
   });
 });
 
-// Routes
+// =====================================================
+// AUTH ROUTES
+// =====================================================
+
 app.use("/api/auth", authRoutes);
+
+// =====================================================
+// CHAT ROUTES
+// =====================================================
+
 app.use("/api/chat", chatRoutes);
 
-// Error handlers (hamesha sabse last me)
+// =====================================================
+// ERROR HANDLERS
+// =====================================================
+
 app.use(notFound);
 app.use(errorHandler);
 
-// Start server
+// =====================================================
+// SERVER
+// =====================================================
+
 app.listen(PORT, () => {
-  console.log(`Server running`);
+  console.log(`Server running on port ${PORT}`);
 });

@@ -23,8 +23,8 @@ const PORT = process.env.PORT || 4000;
 connectDB();
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://bis-saathi-ai-kqiq.vercel.app",
+  "http://localhost:4000",
+  "https://bis-saathi-ai-kqiq.vercel.app/assistant",
 ];
 
 // Middleware

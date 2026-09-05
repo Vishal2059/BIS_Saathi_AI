@@ -29,10 +29,10 @@ connectDB();
 // CORS
 // =====================================================
 
-const allowedOrigins = [
+ const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:4000",
   "https://bis-saathi-ai-kqiq.vercel.app",
+  "https://bis-saathi-ai.vercel.app",
 ];
 
 app.use(
